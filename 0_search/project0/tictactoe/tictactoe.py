@@ -182,51 +182,82 @@ def utility(board):
         return 0
 
     
-def max_value(board):
-    if terminal(board):
-        return utility(board)
-    board_actions = actions(board)
-    # initialize value
-    init = math.factorial(9)
-    # initialize value
-    v = -init
-    best_action = None
-    for action in board_actions:
-        next_board = result(board, action)
-        res = minimax_value(next_board)
-        v = max(v, res)
-        if res> v:
-            best_action = action
-    return v
-
-
-def min_value(board):
-    if terminal(board):
-        return utility(board)
-    board_actions = actions(board)
-    # initialize value
-    init = math.factorial(9)
-    # initialize value
-    v = init
-    best_action = None
-    for action in board_actions:
-        next_board = result(board, action)
-        res = minimax_value(next_board)
-        v = min(v, res)
-        if res<v:
-            best_action = action
-    return v
+#def max_value(board):
+#    # TERMINAL condition
+#    if terminal(board):
+#        # will return -1/0/+1 in this case
+#        return utility(board)
+#    board_actions = actions(board)
+#    # initialize value
+#    init = 2
+#    v = -init
+#    #best_action = None
+#    for action in board_actions:
+#        next_board = result(board, action)
+#        res = minimax_value(next_board)
+#        v = max(v, res)
+#        #if res> v:
+#        #    best_action = action
+#    return v#, best_action
+#
+#
+#def min_value(board):
+#    if terminal(board):
+#        return utility(board)
+#    board_actions = actions(board)
+#    # initialize value
+#    init = 2
+#    v = init
+#    #best_action = None
+#    for action in board_actions:
+#        next_board = result(board, action)
+#        res = minimax_value(next_board)
+#        v = min(v, res)
+#        #if res<v:
+#        #    best_action = action
+#    return v#, best_action
+#    
+#    
+#def minimax_value(board):
+#    if terminal(board):
+#        return utility(board)
+#    player_X_or_O = player(board)
+#
+#    if player_X_or_O==X:
+#        return max_value(board)
+#    if player_X_or_O==O:
+#        return min_value(board)
     
-    
-def minimax_value(board):
+def minimax_value_(board):
+    """
+    Return only the minimax value of the board.
+    """
     if terminal(board):
         return utility(board)
+    
+    # initialize values
+    init = 2
+    board_actions = actions(board)
     player_X_or_O = player(board)
-
+    # set player functions
     if player_X_or_O==X:
-        return max_value(board)
-    if player_X_or_O==O:
-        return min_value(board)
+        func = max
+        v = -init
+    elif player_X_or_O==O:
+        func = min
+        v = init
+    
+    # Computation of minimax value : 
+    # for all actions, compute the minimax value...
+    for action in board_actions:
+        next_board = result(board, action)
+        res = minimax_value(next_board)
+        # and update when a better solution is found
+        # according to the min/max function
+        v = func(v, res)
+    return v
+        
+    
     
 def minimax(board):
     """
@@ -248,25 +279,41 @@ def minimax(board):
 
     board_actions = actions(board)
     player_X_or_O = player(board)
+    # we want to compute and update the best action from this point
     best_action = None
-    init = math.factorial(9)
+    # initial value must be more than the worst
+    # value possible. In this case, 1.
+    init = 2
 
+    # MAX player
     if player_X_or_O==X:
+        # initial value for MAX player is -2 (worst than worst case -1)
         v = -init
+        # Compute the best action among all actions possible
         for action in board_actions:
+            # Compute minimax value for next board
             next_board = result(board, action)
-            res = minimax_value(next_board)
+            res = minimax_value_(next_board)
+            # save the action if the score is the best so far
             if res > v:
                 best_action = action
+            # and update the best score so far
             v = max(v, res)
         return best_action
     
-    if player_X_or_O==O:
+    # MIN player
+    elif player_X_or_O==O:
+        # initial value for MIN player is 2 (worst than worst case 1)
         v = init
+        # Compute the best action among all actions possible
         for action in board_actions:
             next_board = result(board, action)
-            res = minimax_value(next_board)
+            res = minimax_value_(next_board)
+            # save the action if the score is the best so far
             if res < v:
                 best_action = action
+            # and update the best score so far
             v = min(v, res)
         return best_action
+    else:
+        raise ValueError("Player should be X or O but is", player_X_or_O)
