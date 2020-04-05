@@ -12,5 +12,17 @@ python degrees.py large
 ```
 This will run the program on the *large* dataset. For smaller test, run `python degrees.py small`.
 
+# Example
+```
+> python3 degrees.py large
+Loading data...
+Data loaded.
+Name: Tom Hanks
+Name: Tom Cruise
+2 degrees of separation.
+1: Tom Hanks and Bill Paxton starred in Apollo 13
+2: Bill Paxton and Tom Cruise starred in Edge of Tomorrow
+```
+
 # Requirements
 No requirements. Only for Python 3.
