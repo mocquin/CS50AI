@@ -13,6 +13,11 @@ and then :
 python3 runner.py
 ```
 
+To run the tests : 
+```
+python3 -m unittest
+```
+
 # Screenshot
 Please not the pygame interface is already in the project's source.
 
