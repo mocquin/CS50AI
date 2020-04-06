@@ -213,8 +213,45 @@ def minimax_value(board):
         v = func(v, res)
     return v
         
-    
-    
+def minimax_value_alpha_beta(board, alpha, beta):
+    if terminal(board):
+        return utility(board)
+
+    # initialize values
+    init = 2
+    board_actions = actions(board)
+    player_X_or_O = player(board)
+    # set player functions
+    if player_X_or_O==X:
+        func = max
+        v = -init
+    elif player_X_or_O==O:
+        func = min
+        v = init
+    else:
+        raise ValueError("Player is", player_X_or_O)
+        
+    # Computation of minimax value : 
+    # for all actions, compute the minimax value...
+    for action in board_actions:
+        next_board = result(board, action)
+        res = minimax_value_alpha_beta(next_board, alpha, beta)
+        # and update when a better solution is found
+        # according to the min/max function
+        v = func(v, res)
+        if player_X_or_O==X:
+            alpha = max(alpha, res)
+            if beta <= alpha:
+                break
+        elif player_X_or_O==O:
+            beta = min(beta, res)
+            if alpha >= beta:
+                break
+        else:
+            raise ValueError("Player is", player_X_or_O)
+    return v
+
+
 def minimax(board):
     """
     Returns the optimal action for the current player on the board.
@@ -237,6 +274,8 @@ def minimax(board):
     init = 2
     board_actions = actions(board)
     player_X_or_O = player(board)
+    alpha = -init
+    beta = +init
     
     # we want to compute and update the best action from this point
     best_action = None
@@ -252,13 +291,14 @@ def minimax(board):
         op = operator.lt
     else:
         raise ValueError("Player is", player_X_or_O)    
-    
+
     # Computation of minimax best action : 
     # for all actions, compute the minimax value... 
     for action in board_actions:
         # Compute minimax value for next board
         next_board = result(board, action)
-        res = minimax_value(next_board)
+        res = minimax_value_alpha_beta(next_board, alpha, beta)
+        #res = minimax_value(next_board)
         # save the action if the score is the best so far
         if op(res, v):
             best_action = action

@@ -1,7 +1,8 @@
 import unittest
 
 from tictactoe import X, O, EMPTY
-from tictactoe import initial_state, player, actions, result, winner, terminal, utility
+from tictactoe import initial_state, player, actions, result, winner, terminal, utility, minimax_value, minimax_value_alpha_beta
+
 
 class TestTictactoe(unittest.TestCase):
     
@@ -245,3 +246,24 @@ class TestTictactoe(unittest.TestCase):
         self.assertEqual(utility(board_tie),
                         0)
         
+    def test_70_alpha_beta_pruning(self):
+        boards = [
+            [[EMPTY, EMPTY, EMPTY],
+             [EMPTY, EMPTY, EMPTY],
+             [EMPTY, EMPTY, EMPTY]],
+            [[X, X, O],
+             [O, O, X],
+             [X, O, X]],
+            [[X, X, EMPTY],
+             [O, O, O],
+             [X, EMPTY, EMPTY]],
+            [[X, X, EMPTY],
+             [O, O, EMPTY],
+             [EMPTY, EMPTY, EMPTY]],
+            [[O, O, X],
+             [X, X, O],
+             [X, O, X]],
+        ]
+        for board in boards:
+            self.assertEqual(minimax_value(board),
+                            minimax_value_alpha_beta(board, -2, 2))
