@@ -188,7 +188,7 @@ def minimax_value(board):
     """
     if terminal(board):
         return utility(board)
-    
+
     # initialize values
     init = 2
     board_actions = actions(board)
@@ -202,7 +202,7 @@ def minimax_value(board):
         v = init
     else:
         raise ValueError("Player is", player_X_or_O)
-    
+
     # Computation of minimax value : 
     # for all actions, compute the minimax value...
     for action in board_actions:
@@ -212,7 +212,8 @@ def minimax_value(board):
         # according to the min/max function
         v = func(v, res)
     return v
-        
+
+
 def minimax_value_alpha_beta(board, alpha, beta):
     if terminal(board):
         return utility(board)
@@ -230,7 +231,7 @@ def minimax_value_alpha_beta(board, alpha, beta):
         v = init
     else:
         raise ValueError("Player is", player_X_or_O)
-        
+
     # Computation of minimax value : 
     # for all actions, compute the minimax value...
     for action in board_actions:
@@ -240,11 +241,11 @@ def minimax_value_alpha_beta(board, alpha, beta):
         # according to the min/max function
         v = func(v, res)
         if player_X_or_O==X:
-            alpha = max(alpha, res)
+            alpha = func(alpha, res)
             if beta <= alpha:
                 break
         elif player_X_or_O==O:
-            beta = min(beta, res)
+            beta = func(beta, res)
             if alpha >= beta:
                 break
         else:
@@ -276,7 +277,7 @@ def minimax(board):
     player_X_or_O = player(board)
     alpha = -init
     beta = +init
-    
+
     # we want to compute and update the best action from this point
     best_action = None
 
